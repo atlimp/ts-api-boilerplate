@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: dockerfile
+      target: base
+    restart: always
+    volumes:
+      - ./src:/home/node/app/src
+      - ./assets:/home/node/app/assets
+      - ./nodemon.json:/home/node/app/nodemon.json
+    command: npm run dev
+  nginx:
+      image: nginx:latest
+      ports:
+          - "1313:8080"
+      volumes:
+          - ./nginx/lb.dev.conf:/etc/nginx/conf.d/lb.conf
+      depends_on:
+          - api
